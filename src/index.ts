@@ -50,9 +50,29 @@ app.get('/', function (_req, res) {
 
 
 import http from 'http';
+import { createConnection, ConnectOptions } from 'mongoose';
+import { mongodbUrl } from './config/env';
+
 // import { port } from '../config/env';
 const port = process.env.PORT || 3000;
 const server = http.createServer(app);
+
+console.log("mongodbUrl: ", mongodbUrl);
+const MongoDB = createConnection(mongodbUrl as string, {
+  // useNewUrlParser: true,
+  // useUnifiedTopology: true,
+} as ConnectOptions);
+
+MongoDB.once('open', () => {
+  console.log('MongoDB connected!');
+});
+
+MongoDB.on('error', err => {
+  console.error('MongoDB connection error:', err);
+});
+
+
+
 server.listen(port, () => console.log(`Server started on port ${port}`));
 
 export default app;

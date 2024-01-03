@@ -1,15 +1,6 @@
 import { Router } from 'express';
 // import { env } from '../config/env';
-import { authRouter } from './auth.router';
-// import { backstageRouter } from './backstage.router';
-// import { courseTagRouter } from './courseTag.router';
-// import { fakeInformationRouter } from './fakeInformation.router';
-// import { goldFlowRouter } from './goldFlow.router';
-// import { homeRouter } from './home.router';
-// import { itemsRouter } from './items.router';
-// import { orderRouter } from './order.router';
-// import { platformCouponsRouter } from './platformCoupons.router';
-// import { shoppingCartRouter } from './shoppingCart.router';
+import { userRouter } from './user.router';
 
 const apiRouter = Router();
 
@@ -18,13 +9,7 @@ const apiRouter = Router();
 // }
 
 apiRouter.use(
-  authRouter,
-  // backstageRouter,
-  // courseTagRouter,
-  // goldFlowRouter,
-  // homeRouter,
-  // orderRouter,
-  // platformCouponsRouter,
+  userRouter,
   // shoppingCartRouter,
 );
 
