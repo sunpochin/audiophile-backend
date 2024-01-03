@@ -48,7 +48,6 @@ app.get('/', function (_req, res) {
 // // 補捉未處理的 catch
 // process.on('unhandledRejection', handleUnhandledRejection);
 
-
 import http from 'http';
 // import { port } from '../config/env';
 const port = process.env.PORT || 3000;
