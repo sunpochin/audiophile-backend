@@ -1,6 +1,8 @@
 // middleware/authMiddleware.ts
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { jwtSecret } from '../config/env';
 
 interface DecodedToken {
   userId: string;
@@ -14,12 +16,17 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     return res.status(401).json({ message: 'Authentication failed: No token provided' });
   }
 
+  interface CustomRequest extends Request {
+    userId: string;
+  }
+
+  console.log('token: ', token);
   try {
     // 驗證 JWT
-    const decodedToken = jwt.verify(token, 'your_secret_key') as DecodedToken;
+    const decodedToken = jwt.verify(token, jwtSecret as string) as DecodedToken;
 
     // 將解碼的用戶ID添加到請求對象中
-    req.userId = decodedToken.userId;
+    (req as CustomRequest).userId = decodedToken.userId;
 
     // 繼續處理下一個中間件或路由處理函數
     next();

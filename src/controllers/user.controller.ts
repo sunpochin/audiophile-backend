@@ -1,8 +1,9 @@
 // controllers/userController.ts
 import { Request, Response } from 'express';
-import User from '../models/user.model';
-import Cart from '../models/cart.model';
+import { User } from '../connections/mongoDB';
+import { Cart } from '../connections/mongoDB';
 import jwt from 'jsonwebtoken';
+import { jwtSecret } from '../config/env';
 
 interface DecodedToken {
   userId: string;
@@ -18,7 +19,7 @@ const userController = {
         return res.status(401).json({ message: 'Invalid email or password' });
       }
 
-      const token = jwt.sign({ userId: user._id }, 'your_secret_key', { expiresIn: '1h' });
+      const token = jwt.sign({ userId: user._id }, jwtSecret as string, { expiresIn: '1h' });
 
       res.json({ token, userId: user._id });
     } catch (error) {
@@ -53,7 +54,7 @@ const userController = {
       }
 
       try {
-        const decodedToken = jwt.verify(token, 'your_secret_key') as DecodedToken;
+        const decodedToken = jwt.verify(token, jwtSecret as string) as DecodedToken;
         if (decodedToken.userId !== userId) {
           return res.status(401).json({ message: 'Authentication failed' });
         }
