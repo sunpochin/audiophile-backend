@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 import { jwtSecret } from '../config/env';
 console.log("jwtSecret :", jwtSecret);
 import { User } from '../connections/mongoDB';
-//import User from '../models/user.model';
 import userController from '../controllers/user.controller';
 // import { authController } from '../controllers/auth.controller';
 // import { verifyJwtToken } from '../middlewares/verifyType.middewaes';

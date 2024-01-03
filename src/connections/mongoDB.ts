@@ -1,16 +1,12 @@
 import { createConnection, ConnectOptions } from 'mongoose';
 import { mongodbUrl } from '../config/env';
 // import { courseSchema, ICourse } from '../models/courseHierarchy.model';
-// import { courseTagSchema, ICourseTagModel } from '../models/courseTag.model';
-// import { orderSchema, IOrderModel } from '../models/order.model';
-// import { orderDetailsSchema, IOrderDetailsModel } from '../models/orderDetails.model';
-// import { platformCouponsSchema, IPlatformCouponsModel } from '../models/platformCoupons.model';
-// import { shoppingCartSchema, IShoppingCartModel } from '../models/shoppingCart.model';
 // import {
 //   subchapterProgressSchema,
 //   ISubchapterProgressModel,
 // } from '../models/subchapterProgress.model';
 import { UserSchema, UserDocument} from '../models/user.model';
+import { CartSchema, CartDocument} from '../models/cart.model';
 
 console.log("mongodbUrl: ", mongodbUrl);
 const MongoDB = createConnection(mongodbUrl as string, {
@@ -31,14 +27,11 @@ MongoDB.on('error', err => {
 //   subchapterProgressSchema,
 // );
 const User = MongoDB.model<UserDocument>('User', UserSchema);
+const Cart = MongoDB.model<CartDocument>('Cart', CartSchema);
 
 export {
-  // CourseHierarchy,
-  // CourseTag,
   // Order,
   // OrderDetails,
-  // PlatformCoupons,
-  // ShoppingCart,
-  // SubchapterProgress,
   User,
+  Cart,
 };

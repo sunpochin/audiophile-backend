@@ -11,7 +11,7 @@ interface CartDocument extends Document {
   items: CartItem[];
 }
 
-const cartSchema = new Schema<CartDocument>({
+const CartSchema = new Schema<CartDocument>({
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   items: [
     {
@@ -21,6 +21,6 @@ const cartSchema = new Schema<CartDocument>({
   ],
 });
 
-const Cart = model<CartDocument>('Cart', cartSchema);
+// const Cart = model<CartDocument>('Cart', cartSchema);
 
-export default Cart;
+export { CartSchema, CartDocument};
