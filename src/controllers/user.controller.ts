@@ -69,7 +69,7 @@ const userController = {
       }
 
       const cartItem = { productId, quantity };
-      user.cart.items.push(cartItem);
+      // user.cart.items.push(cartItem);
       await user.save();
 
       // Create or update the cart
@@ -77,13 +77,13 @@ const userController = {
       if (!cart) {
         cart = new Cart({ userId, items: [cartItem] });
       } else {
-        const existingCartItem = cart.items.find(item => item.productId.equals(productId));
+        // const existingCartItem = cart.items.find(item => item.productId.equals(productId));
 
-        if (existingCartItem) {
-          existingCartItem.quantity += quantity;
-        } else {
-          cart.items.push(cartItem);
-        }
+        // if (existingCartItem) {
+        //   existingCartItem.quantity += quantity;
+        // } else {
+        //   cart.items.push(cartItem);
+        // }
       }
 
       await cart.save();

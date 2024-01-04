@@ -29,11 +29,9 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 app.use(apiRouter);
-// app.use('/items', itemsRouter);
-// app.use('/api', itemsRouter);
 
 app.get('/', function (_req, res) {
-  res.json('audiophile');
+  res.json('audiophile backend');
 });
 
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
