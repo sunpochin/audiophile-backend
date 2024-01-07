@@ -1,6 +1,6 @@
 // models/user.ts
 import { Schema, model, Document } from 'mongoose';
-interface UserDocument extends Document {
+interface IUser extends Document {
   name: string;
   email: string;
   password: string;
@@ -10,11 +10,11 @@ interface UserDocument extends Document {
   instructors?: string;
 }
 
-const UserSchema = new Schema<UserDocument>({
+const UserSchema = new Schema<IUser>({
   name: String,
   email: String,
   password: String,
 });
 
-export { UserSchema, UserDocument };
+export { UserSchema, IUser };
 

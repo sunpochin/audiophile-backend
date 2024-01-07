@@ -5,7 +5,6 @@ import { jwtSecret } from '../config/env';
 console.log("jwtSecret :", jwtSecret);
 import { User } from '../connections/mongoDB';
 import userController from '../controllers/user.controller';
-// import { authController } from '../controllers/auth.controller';
 // import { verifyJwtToken } from '../middlewares/verifyType.middewaes';
 // import { IUpdateUserRequest } from '../viewModels/controllers/auth.viewModel';
 
@@ -98,10 +97,6 @@ userRouter.post('/v1/login', async (req, res) => {
   // res.send(token);
   //  res.send(user);
 });
-
-userRouter.get('/v1/user/show', userController.UserExists);
-
-userRouter.put('/v1/user/update', userController.updateUser);
 
 userRouter.post('/v1/logout', (_req, res) => {
   res.cookie('jwt', '', { maxAge: 0 });

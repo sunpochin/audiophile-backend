@@ -1,3 +1,5 @@
+
+
 // controllers/userController.ts
 import { Request, Response } from 'express';
 import { User } from '../connections/mongoDB';
@@ -9,7 +11,7 @@ interface DecodedToken {
   userId: string;
 }
 
-const userController = {
+const cartController = {
   login: async (req: Request, res: Response) => {
     try {
       const { email, password } = req.body;
@@ -27,18 +29,10 @@ const userController = {
     }
   },
 
-  getUserById: async (req: Request, res: Response) => {
+  overwriteCart: async (req: Request, res: Response) => {
+    console.log('overwriteCart: ', req.body);
     try {
-      const userId = req.params.userId;
-      const user = await User.findById(userId);
-      res.json(user);
-    } catch (error) {
-      res.status(500).send('Internal Server Error');
-    }
-  },
-
-  addToCart: async (req: Request, res: Response) => {
-    try {
+      console.log('req params:', req.params);
       const userId = req.params.userId;
       const { productId, quantity } = req.body;
 
@@ -90,4 +84,4 @@ const userController = {
   },
 };
 
-export default userController;
+export default cartController;

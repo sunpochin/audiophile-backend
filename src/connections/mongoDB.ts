@@ -1,12 +1,7 @@
 import { createConnection, ConnectOptions } from 'mongoose';
 import { mongodbUrl } from '../config/env';
-// import { courseSchema, ICourse } from '../models/courseHierarchy.model';
-// import {
-//   subchapterProgressSchema,
-//   ISubchapterProgressModel,
-// } from '../models/subchapterProgress.model';
-import { UserSchema, UserDocument} from '../models/user.model';
-import { CartSchema, CartDocument} from '../models/cart.model';
+import { UserSchema, IUser} from '../models/user.model';
+import { CartSchema, ICart} from '../models/cart.model';
 
 console.log("mongodbUrl: ", mongodbUrl);
 const MongoDB = createConnection(mongodbUrl as string, {
@@ -26,8 +21,8 @@ MongoDB.on('error', err => {
 //   'SubchapterProgress',
 //   subchapterProgressSchema,
 // );
-const User = MongoDB.model<UserDocument>('User', UserSchema);
-const Cart = MongoDB.model<CartDocument>('Cart', CartSchema);
+const User = MongoDB.model<IUser>('User', UserSchema);
+const Cart = MongoDB.model<ICart>('Cart', CartSchema);
 
 export {
   // Order,
