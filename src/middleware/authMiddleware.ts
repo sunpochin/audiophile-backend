@@ -10,23 +10,12 @@ import { handleResponse } from '../helpers/handle.helper';
 import { JwtPayload } from './verifyType.type';
 import { Types } from 'mongoose';
 
-// interface JwtPayload {
-//   _id: string;
-// }
-
-// interface CustomRequest<T = void> extends e.Request {
-//   user?: IUserRequest;
-// }
 export interface IRequestBody<T = void> extends e.Request {
   body: T;
 }
 interface IUserRequest extends IUser {
   _id: Types.ObjectId;
 }
-
-// interface IVerifyJwtTokenRequest<T = void> extends IRequestBody<T> {
-//   user?: IUserRequest;
-// }
 
 import {
   IVerifyJwtTokenRequest,

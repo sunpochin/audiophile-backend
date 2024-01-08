@@ -2,11 +2,8 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { jwtSecret } from '../config/env';
-console.log("jwtSecret :", jwtSecret);
 import { User } from '../connections/mongoDB';
 import userController from '../controllers/user.controller';
-// import { verifyJwtToken } from '../middlewares/verifyType.middewaes';
-// import { IUpdateUserRequest } from '../viewModels/controllers/auth.viewModel';
 
 const userRouter = express.Router();
 
