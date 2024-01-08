@@ -6,7 +6,7 @@ import { User } from '../connections/mongoDB';
 import { Cart } from '../connections/mongoDB';
 import jwt from 'jsonwebtoken';
 import { jwtSecret } from '../config/env';
-
+import { IVerifyJwtTokenRequest } from '../viewModels/middlewares/verifyType.viewModel';
 interface DecodedToken {
   userId: string;
 }
@@ -29,12 +29,11 @@ const cartController = {
     }
   },
 
-  overwriteCart: async (req: Request, res: Response) => {
-    console.log('overwriteCart: ', req.body);
+  overwriteCart: async (req: IVerifyJwtTokenRequest, res: Response) => {
+    console.log('overwriteCart user: ', req.user);
     try {
-      console.log('req params:', req.params);
-      const userId = req.params.userId;
-      const { productId, quantity } = req.body;
+      const user = req.user;
+      // const { productId, quantity } = req.body;
 
       // Authentication
       const token = req.headers.authorization?.split(' ')[1];
@@ -44,7 +43,7 @@ const cartController = {
 
       try {
         const decodedToken = jwt.verify(token, jwtSecret as string) as DecodedToken;
-        if (decodedToken.userId !== userId) {
+        if (decodedToken.userId !== user?._id.toString()) {
           return res.status(401).json({ message: 'Authentication failed' });
         }
       } catch (error) {
@@ -52,32 +51,28 @@ const cartController = {
       }
 
       // Create or update the user's cart
-      const user = await User.findById(userId);
+      const foundUser = await User.findById(user?._id);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
 
-      const cartItem = { productId, quantity };
+      // const shoppingCart = 
+      // await Cart.findOne({ user?._id});
+
+      // const cartItem = { productId, quantity };
       // user.cart.items.push(cartItem);
-      await user.save();
+      // await user.save();
 
       // Create or update the cart
-      let cart = await Cart.findOne({ userId });
-      if (!cart) {
-        cart = new Cart({ userId, items: [cartItem] });
-      } else {
-        // const existingCartItem = cart.items.find(item => item.productId.equals(productId));
+      // let cart = await Cart.findOne({ userId });
+      // if (!cart) {
+      //   cart = new Cart({ userId, items: [] });
+      // } else {
+      // }
 
-        // if (existingCartItem) {
-        //   existingCartItem.quantity += quantity;
-        // } else {
-        //   cart.items.push(cartItem);
-        // }
-      }
+      // await cart.save();
 
-      await cart.save();
-
-      res.json(user);
+      res.json(res.json({ message: 'Cart updated' }));
     } catch (error) {
       res.status(500).send('Internal Server Error');
     }
