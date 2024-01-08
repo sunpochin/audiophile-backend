@@ -50,9 +50,9 @@ const userController = {
 
       try {
         const decodedToken = jwt.verify(token, jwtSecret as string) as DecodedToken;
-        if (decodedToken.userId !== userId) {
-          return res.status(401).json({ message: 'Authentication failed' });
-        }
+        // if (decodedToken !== user?._id) {
+        //   return res.status(401).json({ message: 'Authentication failed' });
+        // }
       } catch (error) {
         return res.status(401).json({ message: 'Authentication failed: Invalid token' });
       }
