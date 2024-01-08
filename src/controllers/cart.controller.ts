@@ -15,7 +15,6 @@ interface DecodedToken {
 const cartController = {
   overwriteCart: async (req: IVerifyJwtTokenRequest, res: Response) => {
     const jsonString = JSON.stringify(req.body);
-//    const jsonObj = {items: JSON.parse(jsonString)};
     const jsonObj = JSON.parse(jsonString);
     console.log('jsonObj: ', jsonObj);
     try {
@@ -38,16 +37,33 @@ const cartController = {
       }
       // Create or update the user's cart
       console.log('Create or update the users cart');
-      // let cart = await Cart.findById(claim._id);
-      // console.log('cart: ', cart);
-      const result = await Cart.insertMany({userId: claim._id, items: jsonObj});
-      console.log('result: ', result);
+
+      // 如果沒有資料，就新增一筆
+      // 如果有資料，就更新
+      const cart = await Cart.findOne({ userId: claim._id });
+      console.log('cart: ', cart);
+      if (!cart) {
+        const newCart = new Cart({
+          userId: claim._id,
+          items: jsonObj,
+        });
+        const result = await newCart.save();
+        console.log('result: ', result);
+        return res.json({ message: 'Cart created' });
+      } else {
+        const result = await Cart.updateOne({userId: claim._id}, {items: jsonObj});
+        console.log('result: ', result);
+        return res.json({ message: 'Cart updated' });
+      }
+
+
+      // const result = await Cart.insertMany({userId: claim._id, items: jsonObj});
+      // console.log('result: ', result);
       // if (!cart) {
       //   return res.status(404).json({ message: 'cart not found' });
       // }
       // await cart.save();
-
-      res.json({ message: 'Cart updated' });
+      // res.json({ message: 'Cart updated' });
     } catch (error) {
       console.log('object :', error);
       res.status(500).send('Internal Server Error');
