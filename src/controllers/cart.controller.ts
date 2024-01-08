@@ -14,7 +14,10 @@ interface DecodedToken {
 
 const cartController = {
   overwriteCart: async (req: IVerifyJwtTokenRequest, res: Response) => {
-    console.log('overwriteCart body: ', req.body);
+    const jsonString = JSON.stringify(req.body);
+//    const jsonObj = {items: JSON.parse(jsonString)};
+    const jsonObj = JSON.parse(jsonString);
+    console.log('jsonObj: ', jsonObj);
     try {
       const user = req.user;
       // Authentication
@@ -22,10 +25,10 @@ const cartController = {
       if (!token) {
         return res.status(401).json({ message: 'Authentication failed: No token provided' });
       }
+      let claim = {} as JwtPayload;
       try {
-        const claim = jwt.verify(token, jwtSecret as string) as JwtPayload;
-        // console.log('claim :', claim);
-        console.log('user?._id.toString() :', user?._id.toString());
+        claim = jwt.verify(token, jwtSecret as string) as JwtPayload;
+        console.log('user?._id:', user?._id.toString());
         if (claim._id !== user?._id.toString()) {
           console.log('claim !== user?._id.toString()');
           return res.status(401).json({ message: 'Authentication failed' });
@@ -34,14 +37,16 @@ const cartController = {
         return res.status(401).json({ message: 'Authentication failed: Invalid token' });
       }
       // Create or update the user's cart
-      let cart = await Cart.findById({userID: user._id});
-      console.log('cart: ', cart);
+      console.log('Create or update the users cart');
+      let cart = await Cart.findById(claim._id);
+      const result = await Cart.insertMany({userId: claim._id, items: jsonObj});
+      console.log('result: ', result);
       if (!cart) {
         return res.status(404).json({ message: 'cart not found' });
       }
-      console.log('cart: ', cart);
+      console.log('req.body: ', req.body);
       if (!cart) {
-        cart = new Cart({ userID: user._id, items: req.body });
+        cart = new Cart({ userID: user._id, items: [] });
       } else {
       }
 
