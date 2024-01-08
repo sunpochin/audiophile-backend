@@ -38,25 +38,26 @@ const cartController = {
       }
       // Create or update the user's cart
       console.log('Create or update the users cart');
-      let cart = await Cart.findById(claim._id);
+      // let cart = await Cart.findById(claim._id);
+      // console.log('cart: ', cart);
       const result = await Cart.insertMany({userId: claim._id, items: jsonObj});
       console.log('result: ', result);
-      if (!cart) {
-        return res.status(404).json({ message: 'cart not found' });
-      }
-      console.log('req.body: ', req.body);
-      if (!cart) {
-        cart = new Cart({ userID: user._id, items: [] });
-      } else {
-      }
-
-      await cart.save();
+      // if (!cart) {
+      //   return res.status(404).json({ message: 'cart not found' });
+      // }
+      // await cart.save();
 
       res.json({ message: 'Cart updated' });
     } catch (error) {
       console.log('object :', error);
       res.status(500).send('Internal Server Error');
     }
+  },
+
+  showCart: async (req: IVerifyJwtTokenRequest, res: Response) => {
+    const cartData = await Cart.find({userId: req.user?._id});
+    console.log('cart show controller: ', cartData);
+    res.send(cartData[0]);
   },
 };
 
