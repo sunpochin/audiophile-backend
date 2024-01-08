@@ -6,79 +6,55 @@ import { User } from '../connections/mongoDB';
 import { Cart } from '../connections/mongoDB';
 import jwt from 'jsonwebtoken';
 import { jwtSecret } from '../config/env';
-
+import { IVerifyJwtTokenRequest } from '../viewModels/middlewares/verifyType.viewModel';
+import { JwtPayload } from '../middleware/verifyType.type';
 interface DecodedToken {
   userId: string;
 }
 
 const cartController = {
-  login: async (req: Request, res: Response) => {
+  overwriteCart: async (req: IVerifyJwtTokenRequest, res: Response) => {
+    const jsonString = JSON.stringify(req.body);
+//    const jsonObj = {items: JSON.parse(jsonString)};
+    const jsonObj = JSON.parse(jsonString);
+    console.log('jsonObj: ', jsonObj);
     try {
-      const { email, password } = req.body;
-      const user = await User.findOne({ email, password });
-
-      if (!user) {
-        return res.status(401).json({ message: 'Invalid email or password' });
-      }
-
-      const token = jwt.sign({ userId: user._id }, jwtSecret as string, { expiresIn: '1h' });
-
-      res.json({ token, userId: user._id });
-    } catch (error) {
-      res.status(500).send('Internal Server Error');
-    }
-  },
-
-  overwriteCart: async (req: Request, res: Response) => {
-    console.log('overwriteCart: ', req.body);
-    try {
-      console.log('req params:', req.params);
-      const userId = req.params.userId;
-      const { productId, quantity } = req.body;
-
+      const user = req.user;
       // Authentication
       const token = req.headers.authorization?.split(' ')[1];
       if (!token) {
         return res.status(401).json({ message: 'Authentication failed: No token provided' });
       }
-
+      let claim = {} as JwtPayload;
       try {
-        const decodedToken = jwt.verify(token, jwtSecret as string) as DecodedToken;
-        if (decodedToken.userId !== userId) {
+        claim = jwt.verify(token, jwtSecret as string) as JwtPayload;
+        console.log('user?._id:', user?._id.toString());
+        if (claim._id !== user?._id.toString()) {
+          console.log('claim !== user?._id.toString()');
           return res.status(401).json({ message: 'Authentication failed' });
         }
       } catch (error) {
         return res.status(401).json({ message: 'Authentication failed: Invalid token' });
       }
-
       // Create or update the user's cart
-      const user = await User.findById(userId);
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-
-      const cartItem = { productId, quantity };
-      // user.cart.items.push(cartItem);
-      await user.save();
-
-      // Create or update the cart
-      let cart = await Cart.findOne({ userId });
+      console.log('Create or update the users cart');
+      let cart = await Cart.findById(claim._id);
+      const result = await Cart.insertMany({userId: claim._id, items: jsonObj});
+      console.log('result: ', result);
       if (!cart) {
-        cart = new Cart({ userId, items: [cartItem] });
+        return res.status(404).json({ message: 'cart not found' });
+      }
+      console.log('req.body: ', req.body);
+      if (!cart) {
+        cart = new Cart({ userID: user._id, items: [] });
       } else {
-        // const existingCartItem = cart.items.find(item => item.productId.equals(productId));
-
-        // if (existingCartItem) {
-        //   existingCartItem.quantity += quantity;
-        // } else {
-        //   cart.items.push(cartItem);
-        // }
       }
 
       await cart.save();
 
-      res.json(user);
+      res.json({ message: 'Cart updated' });
     } catch (error) {
+      console.log('object :', error);
       res.status(500).send('Internal Server Error');
     }
   },

@@ -8,7 +8,7 @@
     "coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "dev": "ts-node-dev --respawn --pretty --transpile-only src/index.ts",
     "start": "node --max-old-space-size=4096 -r ts-node/register src/index.ts",
-    "mon": "npx nodemon src/bin/www.ts",
+    "mon": "npx nodemon src/index.ts",
     "mon:dev": "npx cross-env ENV=dev nodemon src/index.ts",
     "mon:prod": "npx cross-env ENV=prod nodemon src/bin/www.ts",
     "swagger": "npx ts-node src/config/swagger.ts"

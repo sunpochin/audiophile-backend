@@ -12,7 +12,7 @@ import authMiddleware from '../middleware/authMiddleware';
 const cartRouter = express.Router();
 
 
-cartRouter.get('/cart/show', authMiddleware, async (req, res) => {
+cartRouter.get('/v1/cart/show', authMiddleware, async (req, res) => {
   console.log('cart');
   const users = await Cart.find({});
   res.send(users);
